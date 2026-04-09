@@ -13,8 +13,29 @@ class HealthCheck(Resource):
         return {"status": "UP"}, 200
 
 class BlacklistResource(Resource):
+
+    @jwt_required()
+    def get(self, email):
+        #verify_jwt_in_request()
+        
+        
+        blacklist_entry = Blacklist.query.filter_by(email=email).first()
+        
+        if blacklist_entry:
+            return {
+                "present": True,
+                "blocked_reason": blacklist_entry.blocked_reason or ""
+            }, 200
+        else:
+            return {
+                "present": False,
+                "blocked_reason": ""
+            }, 200
+    
     @jwt_required()
     def post(self):
+
+        #verify_jwt_in_request()
         data = request.get_json()
         
         # Validar datos con Marshmallow

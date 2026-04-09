@@ -30,7 +30,7 @@ def create_app():
     from .resources import BlacklistResource, HealthCheck
     api = Api(application)
     
-    api.add_resource(BlacklistResource, '/blacklists')
+    api.add_resource(BlacklistResource, '/blacklists', '/blacklists/<email>')
     api.add_resource(HealthCheck, '/health')
 
     return application
