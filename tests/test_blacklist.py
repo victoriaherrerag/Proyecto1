@@ -23,7 +23,7 @@ def test_add_to_blacklist_invalid_email(client, auth_header):
                            data=json.dumps(payload), 
                            headers={**auth_header, "Content-Type": "application/json"})
     assert response.status_code == 400
-    assert "email" in response.json
+    assert "email" in response.json["errors"]
 
 def test_check_email_exists(client, auth_header):
     # Primero insertamos
