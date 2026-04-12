@@ -20,6 +20,23 @@ def create_app(config_class=Config):
     db.init_app(application)
     ma.init_app(application)
     jwt.init_app(application)
+
+    # JWT Error Handlers - Ensure 401 responses for auth errors
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_payload):
+        return {"msg": "Token has expired"}, 401
+
+    @jwt.invalid_token_loader
+    def invalid_token_callback(error):
+        return {"msg": "Invalid token"}, 401
+
+    @jwt.unauthorized_loader
+    def missing_token_callback(error):
+        return {"msg": "Missing Authorization Header"}, 401
+
+    @jwt.revoked_token_loader
+    def revoked_token_callback(jwt_header, jwt_payload):
+        return {"msg": "Token has been revoked"}, 401
     
     # 3. Importar modelos antes de inicializar Migrate
     # Esto permite que Alembic (el motor de Migrate) vea las tablas
